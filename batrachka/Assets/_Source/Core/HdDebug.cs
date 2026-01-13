@@ -5,7 +5,7 @@ namespace Core
 {
     public class HdDebug : MonoBehaviour
     {
-        void Start()
+        public void Start()
         {
             Debug.Log("/// Отчет по хотдогам ///");
             
@@ -26,7 +26,6 @@ namespace Core
             
             Hotdog hotdogWithSweetOnion = new SweetOnionDecorator(baseHotdog); // Декоратор для сладкого лука
             Debug.Log($"{hotdogWithSweetOnion.GetName()} — {hotdogWithSweetOnion.GetCost()}р.");
-
         }
     }
 }

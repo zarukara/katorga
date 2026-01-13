@@ -14,6 +14,6 @@ namespace HotdogLore
             return _hotdog.GetName();
         }
 
-        public override abstract int GetCost();
+        public abstract override int GetCost();
     }
 }
