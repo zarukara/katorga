@@ -45,8 +45,14 @@ namespace EnemySystem
 
             if (health <= 0)
             {
-                Destroy(gameObject);
+                Die();
             }
+        }
+        
+        private void Die()
+        {
+            EventManager.EnemyKilled();
+            Destroy(gameObject);
         }
     }
 }

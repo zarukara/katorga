@@ -2,16 +2,16 @@ namespace PlayerSystem
 {
     public class ShootCommand : ICommand
     {
-        private PlayerCore pcore;
+        private IWeapon weapon;
 
-        public ShootCommand(PlayerCore movement)
+        public ShootCommand(IWeapon weapon)
         {
-            this.pcore = movement;
+            this.weapon = weapon;
         }
 
         public void Execute()
         {
-            pcore.Shoot();
+            weapon.Attack();
         }
     }
 }

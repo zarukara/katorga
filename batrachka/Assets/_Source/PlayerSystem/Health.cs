@@ -9,7 +9,8 @@ namespace PlayerSystem
         public void TakeDamage(int damage)
         {
             health -= damage;
-            Debug.Log("Player HP: " + health);
+
+            EventManager.PlayerDamaged(damage);
 
             if (health <= 0)
             {
@@ -19,7 +20,7 @@ namespace PlayerSystem
 
         private void Die()
         {
-            Debug.Log("Player died");
+            Debug.Log("GG");
         }
     }
 }

@@ -7,9 +7,9 @@ namespace PlayerSystem
         private PlayerCore movement;
         private Vector2 input;
 
-        public MoveCommand(PlayerCore movement, Vector2 input)
+        public MoveCommand(PlayerCore core, Vector2 input)
         {
-            this.movement = movement;
+            movement = core;
             this.input = input;
         }
 
