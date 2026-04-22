@@ -1,12 +1,12 @@
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace ResourcesSystem
 {
     public class ResourceItemView : MonoBehaviour
     {
-        public Text nameText;
-        public Text valueText;
+        public TMP_Text  nameText;
+        public TMP_Text  valueText;
 
         private ResourceType type;
         private ResourceManager resourceManager;

@@ -35,9 +35,11 @@ namespace ResourcesSystem
 
         public void ResetResources()
         {
-            foreach (ResourceType type in resources.Keys)
+            var keys = new List<ResourceType>(resources.Keys);
+
+            foreach (var key in keys)
             {
-                resources[type] = 0;
+                resources[key] = 0;
             }
         }
     }
