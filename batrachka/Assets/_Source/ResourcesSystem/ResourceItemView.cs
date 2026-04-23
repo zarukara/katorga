@@ -24,5 +24,17 @@ namespace ResourcesSystem
         {
             valueText.text = resourceManager.GetResource(type).ToString();
         }
+        
+        private void OnEnable()
+        {
+            if (resourceManager != null)
+                resourceManager.OnResourcesChanged += UpdateView;
+        }
+
+        private void OnDisable()
+        {
+            if (resourceManager != null)
+                resourceManager.OnResourcesChanged -= UpdateView;
+        }
     }
 }

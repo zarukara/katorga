@@ -1,14 +1,14 @@
 using System;
 using ResourcesSystem;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace CoreSystem
+namespace UISystem
 {
-    public class AddMenuUI : MonoBehaviour
+    public class RemoveMenuUI : MonoBehaviour
     {
-        public Dropdown dropdown;
-        public InputField inputField;
+        public TMP_Dropdown dropdown;
+        public TMP_InputField inputField;
         public ResourceManager resourceManager;
 
         private void Start()
@@ -17,13 +17,13 @@ namespace CoreSystem
 
             foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
             {
-                dropdown.options.Add(new Dropdown.OptionData(type.ToString()));
+                dropdown.options.Add(new TMP_Dropdown.OptionData(type.ToString()));
             }
 
             dropdown.value = 0;
         }
 
-        public void OnAddClicked()
+        public void OnRemoveClicked()
         {
             if (!int.TryParse(inputField.text, out int amount))
             {
@@ -39,7 +39,15 @@ namespace CoreSystem
 
             ResourceType type = (ResourceType)dropdown.value;
 
-            resourceManager.Add(type, amount);
+            int current = resourceManager.GetResource(type);
+
+            if (current < amount)
+            {
+                Debug.Log("не в ресурсе");
+                return;
+            }
+
+            resourceManager.Remove(type, amount);
 
             inputField.text = "";
         }

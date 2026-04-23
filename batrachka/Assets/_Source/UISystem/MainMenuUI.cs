@@ -1,7 +1,7 @@
 using ResourcesSystem;
 using UnityEngine;
 
-namespace CoreSystem
+namespace UISystem
 {
     public class MainMenuUI : MonoBehaviour
     {

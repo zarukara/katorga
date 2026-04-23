@@ -15,11 +15,6 @@ namespace CoreSystem
             stateMachine = new UIStateMachine();
         }
 
-        private void Start()
-        {
-            stateMachine.ChangeState(new MainMenuState(mainMenu, addMenu, removeMenu));
-        }
-
         public void ShowMainMenu()
         {
             stateMachine.ChangeState(new MainMenuState(mainMenu, addMenu, removeMenu));
