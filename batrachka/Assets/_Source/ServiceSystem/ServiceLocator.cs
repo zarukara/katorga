@@ -6,12 +6,19 @@ namespace ServiceSystem
 {
     public class ServiceLocator : IService
     {
-        private Dictionary<Type, object> services = new Dictionary<Type, object>();
+        private Dictionary<Type, object> services =
+            new Dictionary<Type, object>();
 
-        public ServiceLocator(IFadeService fadeService, ISoundPlayer soundPlayer)
+        public ServiceLocator(
+            IFadeService fadeService,
+            ISoundPlayer soundPlayer,
+            ISaver saver)
         {
             services[typeof(IFadeService)] = fadeService;
+
             services[typeof(ISoundPlayer)] = soundPlayer;
+
+            services[typeof(ISaver)] = saver;
         }
 
         public T GetService<T>()

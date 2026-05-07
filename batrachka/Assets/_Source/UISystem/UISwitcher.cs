@@ -1,7 +1,7 @@
+using UISystem;
 using UnityEngine;
-using ViewSystem;
 
-namespace UISystem
+namespace ViewSystem
 {
     public class UISwitcher : MonoBehaviour
     {
@@ -10,9 +10,16 @@ namespace UISystem
 
         private IUIState currentState;
 
+        private Score score = new Score();
+
         private void Start()
         {
-            SwitchState(new MainState(mainView, panelView, this));
+            SwitchState(
+                new MainState(
+                    mainView,
+                    panelView,
+                    this,
+                    score));
         }
 
         public void SwitchState(IUIState newState)

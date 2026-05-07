@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace ViewSystem
 {
@@ -9,6 +10,10 @@ namespace ViewSystem
         [SerializeField] private Button closeButton;
 
         private Action closeAction;
+        private Action collectAction;
+        
+        [SerializeField] private TMP_Text scoreText;
+        [SerializeField] private Button collectButton;
 
         public void SubscribeOnClose(Action action)
         {
@@ -34,6 +39,27 @@ namespace ViewSystem
         public void Hide()
         {
             gameObject.SetActive(false);
+        }
+        
+        public void SubscribeOnCollect(Action action)
+        {
+            collectAction = action;
+            collectButton.onClick.AddListener(OnCollectClicked);
+        }
+
+        public void UnsubscribeOnCollect(Action action)
+        {
+            collectButton.onClick.RemoveListener(OnCollectClicked);
+        }
+
+        private void OnCollectClicked()
+        {
+            collectAction?.Invoke();
+        }
+
+        public void UpdateScore(int value)
+        {
+            scoreText.text = value.ToString();
         }
     }
 }

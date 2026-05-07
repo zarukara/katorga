@@ -1,6 +1,6 @@
-using ViewSystem;
+using UISystem;
 
-namespace UISystem
+namespace ViewSystem
 {
     public class MainState : IUIState
     {
@@ -8,16 +8,24 @@ namespace UISystem
         private PanelView panelView;
         private UISwitcher switcher;
 
-        public MainState(MainView mainView, PanelView panelView, UISwitcher switcher)
+        private Score score;
+
+        public MainState(
+            MainView mainView,
+            PanelView panelView,
+            UISwitcher switcher,
+            Score score)
         {
             this.mainView = mainView;
             this.panelView = panelView;
             this.switcher = switcher;
+            this.score = score;
         }
 
         public void Enter()
         {
             panelView.Hide();
+
             mainView.SetInteractable(true);
 
             mainView.SubscribeOnOpen(OnOpenClicked);
@@ -30,7 +38,12 @@ namespace UISystem
 
         private void OnOpenClicked()
         {
-            switcher.SwitchState(new PanelState(mainView, panelView, switcher));
+            switcher.SwitchState(
+                new PanelState(
+                    mainView,
+                    panelView,
+                    switcher,
+                    score));
         }
     }
 }
