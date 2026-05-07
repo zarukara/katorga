@@ -21,5 +21,20 @@ namespace ServiceSystem
 
             File.WriteAllText(path, json);
         }
+        
+        public int LoadScore(string path = null)
+        {
+            if (!File.Exists(path))
+            {
+                return 0;
+            }
+
+            string json = File.ReadAllText(path);
+
+            ScoreData data =
+                JsonUtility.FromJson<ScoreData>(json);
+
+            return data.score;
+        }
     }
 }

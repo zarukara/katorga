@@ -1,7 +1,8 @@
-using UISystem;
+using ServiceSystem;
 using UnityEngine;
+using ViewSystem;
 
-namespace ViewSystem
+namespace UISystem
 {
     public class UISwitcher : MonoBehaviour
     {
@@ -14,6 +15,13 @@ namespace ViewSystem
 
         private void Start()
         {
+            ISaver saver =
+                Bootstrapper.Services.GetService<ISaver>();
+
+            score.Set(
+                saver.LoadScore(
+                    Application.persistentDataPath + "/save.json"));
+
             SwitchState(
                 new MainState(
                     mainView,

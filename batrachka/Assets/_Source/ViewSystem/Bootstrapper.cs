@@ -28,7 +28,7 @@ namespace ViewSystem
             }
             else
             {
-                saver = new PlayerаPrefsSaver();
+                saver = new PlayerPrefsSaver();
             }
 
             Services = new ServiceLocator(

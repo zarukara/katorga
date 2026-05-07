@@ -10,5 +10,10 @@ namespace UISystem
         {
             value += amount;
         }
+        
+        public void Set(int value)
+        {
+            this.value = value;
+        }
     }
 }
