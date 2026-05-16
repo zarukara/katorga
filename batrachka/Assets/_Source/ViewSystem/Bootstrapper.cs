@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using ServiceSystem;
+using GameAnalyticsSDK;
 
 namespace ViewSystem
 {
@@ -12,6 +14,11 @@ namespace ViewSystem
         [SerializeField] private AudioClip closeClip;
 
         [SerializeField] private bool useJsonSaver;
+
+        private void Start()
+        {
+            GameAnalytics.Initialize();
+        }
 
         private void Awake()
         {

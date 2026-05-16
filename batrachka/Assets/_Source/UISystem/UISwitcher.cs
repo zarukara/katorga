@@ -1,6 +1,7 @@
 using ServiceSystem;
 using UnityEngine;
 using ViewSystem;
+using GameAnalyticsSDK;
 
 namespace UISystem
 {
@@ -15,6 +16,8 @@ namespace UISystem
 
         private void Start()
         {
+            GameAnalytics.NewDesignEvent("game_started");
+            
             ISaver saver =
                 Bootstrapper.Services.GetService<ISaver>();
 
