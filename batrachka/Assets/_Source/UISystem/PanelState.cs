@@ -2,6 +2,7 @@ using ServiceSystem;
 using UnityEngine;
 using UnityEngine.UI;
 using ViewSystem;
+using GameAnalyticsSDK;
 
 namespace UISystem
 {
@@ -69,6 +70,7 @@ namespace UISystem
 
             soundPlayer.PlayCloseSound();
 
+            GameAnalytics.NewDesignEvent("score_saved");
             saver.SaveScore(
                 score.Value,
                 Application.persistentDataPath + "/save.json");
@@ -76,6 +78,8 @@ namespace UISystem
 
         private void OnCloseClicked()
         {
+            GameAnalytics.NewDesignEvent("panel_closed");
+            
             switcher.SwitchState(
                 new MainState(
                     mainView,
@@ -86,6 +90,8 @@ namespace UISystem
 
         private void OnCollectClicked()
         {
+            GameAnalytics.NewDesignEvent("collect_clicked");
+            
             score.Add(1);
 
             panelView.UpdateScore(score.Value);

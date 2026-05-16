@@ -51,6 +51,14 @@
   }
 }</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+    <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="$USER_HOME$/Desktop/билд\batrachka.exe" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\Eugen\Desktop\билд" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.9f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath D:\Git\katorga\batrachka -debugCodeOptimization" />
@@ -99,7 +107,7 @@
       <workItem from="1768307120530" duration="4209000" />
       <workItem from="1778156961244" duration="2393000" />
       <workItem from="1778174901561" duration="235000" />
-      <workItem from="1778863544882" duration="1195000" />
+      <workItem from="1778863544882" duration="2817000" />
     </task>
     <servers />
   </component>

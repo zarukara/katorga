@@ -1,6 +1,7 @@
-using UISystem;
+using ViewSystem;
+using GameAnalyticsSDK;
 
-namespace ViewSystem
+namespace UISystem
 {
     public class MainState : IUIState
     {
@@ -38,6 +39,8 @@ namespace ViewSystem
 
         private void OnOpenClicked()
         {
+            GameAnalytics.NewDesignEvent("panel_opened");
+            
             switcher.SwitchState(
                 new PanelState(
                     mainView,
