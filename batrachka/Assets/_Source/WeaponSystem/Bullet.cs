@@ -1,5 +1,5 @@
 using System.Collections;
-using AudioSystem;
+using ObstacleSystem;
 using PoolSystem;
 using UnityEngine;
 
@@ -12,19 +12,15 @@ namespace WeaponSystem
         [SerializeField] private float lifeTime = 2f;
 
         private BulletPool bulletPool;
-        private GameplayAudioService audioService;
 
         private Vector3 direction;
         private Coroutine lifeRoutine;
         private bool isActive;
 
         [Zenject.Inject]
-        public void Construct(
-            BulletPool bulletPool,
-            GameplayAudioService audioService)
+        public void Construct(BulletPool bulletPool)
         {
             this.bulletPool = bulletPool;
-            this.audioService = audioService;
         }
 
         public void Launch(Vector3 shootDirection)
@@ -59,6 +55,14 @@ namespace WeaponSystem
                 return;
             }
 
+            DestructibleObstacle obstacle =
+                other.GetComponentInParent<DestructibleObstacle>();
+
+            if (obstacle != null)
+            {
+                obstacle.DestroyObstacle();
+            }
+
             ReturnToPool();
         }
 
@@ -71,6 +75,11 @@ namespace WeaponSystem
 
         private void ReturnToPool()
         {
+            if (!isActive)
+            {
+                return;
+            }
+
             isActive = false;
 
             if (lifeRoutine != null)

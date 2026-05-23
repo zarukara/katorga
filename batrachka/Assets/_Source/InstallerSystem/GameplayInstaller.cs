@@ -1,4 +1,5 @@
 using AudioSystem;
+using ObstacleSystem;
 using PlayerSystem;
 using PoolSystem;
 using UnityEngine;
@@ -27,7 +28,7 @@ namespace InstallerSystem
             BindPlayer();
             BindAudio();
             BindBulletPool();
-            InjectSceneObjects();
+            QueueSceneObjectsForInject();
         }
 
         private void BindPlayer()
@@ -68,9 +69,17 @@ namespace InstallerSystem
                 .NonLazy();
         }
 
-        private void InjectSceneObjects()
+        private void QueueSceneObjectsForInject()
         {
             Container.QueueForInject(playerShooter);
+
+            DestructibleObstacle[] obstacles =
+                FindObjectsOfType<DestructibleObstacle>();
+
+            foreach (DestructibleObstacle obstacle in obstacles)
+            {
+                Container.QueueForInject(obstacle);
+            }
         }
     }
 }
