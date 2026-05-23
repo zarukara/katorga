@@ -11,6 +11,24 @@ namespace ObstacleSystem
         [SerializeField] private float destroyFragmentsDelay = 4f;
 
         private GameplayAudioService audioService;
+        private bool isDestroyed;
+
+        public bool IsDestroyed => isDestroyed;
+
+        public Vector3 AimPoint
+        {
+            get
+            {
+                Collider obstacleCollider = GetComponent<Collider>();
+
+                if (obstacleCollider != null)
+                {
+                    return obstacleCollider.bounds.center;
+                }
+
+                return transform.position;
+            }
+        }
 
         [Inject]
         public void Construct(GameplayAudioService audioService)
@@ -20,7 +38,17 @@ namespace ObstacleSystem
 
         public void DestroyObstacle()
         {
-            audioService.PlayObstacleHitSound();
+            if (isDestroyed)
+            {
+                return;
+            }
+
+            isDestroyed = true;
+
+            if (audioService != null)
+            {
+                audioService.PlayObstacleHitSound();
+            }
 
             if (fracturedPrefab != null)
             {
@@ -32,6 +60,20 @@ namespace ObstacleSystem
                 DisableFragmentsCollisionWithPlayer(fragments);
 
                 Destroy(fragments, destroyFragmentsDelay);
+            }
+
+            Collider obstacleCollider = GetComponent<Collider>();
+
+            if (obstacleCollider != null)
+            {
+                obstacleCollider.enabled = false;
+            }
+
+            Renderer obstacleRenderer = GetComponent<Renderer>();
+
+            if (obstacleRenderer != null)
+            {
+                obstacleRenderer.enabled = false;
             }
 
             Destroy(gameObject);

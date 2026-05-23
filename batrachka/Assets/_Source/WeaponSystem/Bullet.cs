@@ -1,7 +1,9 @@
 using System.Collections;
 using ObstacleSystem;
 using PoolSystem;
+using TargetSystem;
 using UnityEngine;
+using Zenject;
 
 namespace WeaponSystem
 {
@@ -12,19 +14,52 @@ namespace WeaponSystem
         [SerializeField] private float lifeTime = 2f;
 
         private BulletPool bulletPool;
+        private ITargetData targetData;
 
         private Vector3 direction;
+        private Vector3 targetPoint;
         private Coroutine lifeRoutine;
         private bool isActive;
+        private bool useMovingTarget;
 
-        [Zenject.Inject]
-        public void Construct(BulletPool bulletPool)
+        [Inject]
+        public void Construct(
+            BulletPool bulletPool,
+            ITargetData targetData)
         {
             this.bulletPool = bulletPool;
+            this.targetData = targetData;
         }
 
-        public void Launch(Vector3 shootDirection)
+        public void LaunchToPoint(Vector3 point)
         {
+            targetPoint = point;
+            useMovingTarget = false;
+
+            Vector3 shootDirection = targetPoint - transform.position;
+            shootDirection.y = 0f;
+
+            Launch(shootDirection);
+        }
+
+        public void LaunchToTarget()
+        {
+            useMovingTarget = true;
+
+            Vector3 shootDirection = targetData.Position - transform.position;
+            shootDirection.y = 0f;
+
+            Launch(shootDirection);
+        }
+
+        private void Launch(Vector3 shootDirection)
+        {
+            if (shootDirection.sqrMagnitude <= 0.01f)
+            {
+                ReturnToPool();
+                return;
+            }
+
             direction = shootDirection.normalized;
             isActive = true;
 
@@ -45,7 +80,23 @@ namespace WeaponSystem
                 return;
             }
 
-            transform.position += direction * (speed * Time.deltaTime);
+            if (useMovingTarget)
+            {
+                Vector3 targetDirection = targetData.Position - transform.position;
+                targetDirection.y = 0f;
+
+                if (targetDirection.sqrMagnitude > 0.01f)
+                {
+                    direction = targetDirection.normalized;
+                }
+            }
+
+            transform.position += direction * speed * Time.deltaTime;
+
+            if (direction.sqrMagnitude > 0.01f)
+            {
+                transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+            }
         }
 
         private void OnTriggerEnter(Collider other)
@@ -81,6 +132,7 @@ namespace WeaponSystem
             }
 
             isActive = false;
+            useMovingTarget = false;
 
             if (lifeRoutine != null)
             {
@@ -89,6 +141,10 @@ namespace WeaponSystem
             }
 
             bulletPool.Release(this);
+        }
+
+        public class Factory : PlaceholderFactory<Bullet>
+        {
         }
     }
 }

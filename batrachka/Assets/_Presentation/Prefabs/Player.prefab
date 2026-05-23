@@ -945,6 +945,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootPoint: {fileID: 4704967279888364922}
+  obstacleSearchRadius: 6
+  obstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &8648869785747781779
 GameObject:
   m_ObjectHideFlags: 0

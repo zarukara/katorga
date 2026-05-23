@@ -2,6 +2,7 @@ using AudioSystem;
 using ObstacleSystem;
 using PlayerSystem;
 using PoolSystem;
+using TargetSystem;
 using UnityEngine;
 using WeaponSystem;
 using Zenject;
@@ -13,6 +14,9 @@ namespace InstallerSystem
         [Header("Player")]
         [SerializeField] private PlayerMovement playerMovement;
         [SerializeField] private PlayerShooter playerShooter;
+
+        [Header("Target")]
+        [SerializeField] private MovingTarget movingTarget;
 
         [Header("Bullet Pool")]
         [SerializeField] private Bullet bulletPrefab;
@@ -26,6 +30,7 @@ namespace InstallerSystem
         public override void InstallBindings()
         {
             BindPlayer();
+            BindTarget();
             BindAudio();
             BindBulletPool();
             QueueSceneObjectsForInject();
@@ -46,6 +51,21 @@ namespace InstallerSystem
                 .NonLazy();
         }
 
+        private void BindTarget()
+        {
+            Container
+                .Bind<MovingTarget>()
+                .FromInstance(movingTarget)
+                .AsSingle()
+                .NonLazy();
+
+            Container
+                .Bind<ITargetData>()
+                .FromInstance(movingTarget)
+                .AsSingle()
+                .NonLazy();
+        }
+
         private void BindAudio()
         {
             Container
@@ -61,17 +81,20 @@ namespace InstallerSystem
         private void BindBulletPool()
         {
             Container
+                .BindFactory<Bullet, Bullet.Factory>()
+                .FromComponentInNewPrefab(bulletPrefab)
+                .UnderTransform(bulletPoolParent);
+
+            Container
                 .Bind<BulletPool>()
                 .AsSingle()
-                .WithArguments(
-                    bulletPrefab,
-                    bulletPoolParent)
                 .NonLazy();
         }
 
         private void QueueSceneObjectsForInject()
         {
             Container.QueueForInject(playerShooter);
+            Container.QueueForInject(movingTarget);
 
             DestructibleObstacle[] obstacles =
                 FindObjectsOfType<DestructibleObstacle>();

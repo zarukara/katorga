@@ -1,26 +1,17 @@
 using System.Collections.Generic;
-using UnityEngine;
 using WeaponSystem;
-using Zenject;
 
 namespace PoolSystem
 {
     public class BulletPool
     {
-        private readonly DiContainer container;
-        private readonly Bullet bulletPrefab;
-        private readonly Transform poolParent;
+        private readonly Bullet.Factory bulletFactory;
 
         private readonly Queue<Bullet> bullets = new Queue<Bullet>();
 
-        public BulletPool(
-            DiContainer container,
-            Bullet bulletPrefab,
-            Transform poolParent)
+        public BulletPool(Bullet.Factory bulletFactory)
         {
-            this.container = container;
-            this.bulletPrefab = bulletPrefab;
-            this.poolParent = poolParent;
+            this.bulletFactory = bulletFactory;
         }
 
         public Bullet Get()
@@ -32,9 +23,7 @@ namespace PoolSystem
                 return bullet;
             }
 
-            Bullet newBullet = container.InstantiatePrefabForComponent<Bullet>(
-                bulletPrefab,
-                poolParent);
+            Bullet newBullet = bulletFactory.Create();
 
             return newBullet;
         }
