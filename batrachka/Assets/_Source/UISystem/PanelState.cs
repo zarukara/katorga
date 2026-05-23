@@ -2,42 +2,43 @@ using ServiceSystem;
 using UnityEngine;
 using UnityEngine.UI;
 using ViewSystem;
+using Zenject;
 
 namespace UISystem
 {
     public class PanelState : IUIState
     {
-        private MainView mainView;
-        private PanelView panelView;
-        private UISwitcher switcher;
+        private readonly MainView mainView;
+        private readonly PanelView panelView;
+        private readonly UISwitcher switcher;
+        private readonly MainState.Factory mainStateFactory;
 
-        private IFadeService fadeService;
-        private ISoundPlayer soundPlayer;
-        private ISaver saver;
+        private readonly IFadeService fadeService;
+        private readonly ISoundPlayer soundPlayer;
+        private readonly ISaver saver;
+        private readonly Score score;
 
-        private Image panelImage;
-
-        private Score score;
+        private readonly Image panelImage;
 
         public PanelState(
             MainView mainView,
             PanelView panelView,
             UISwitcher switcher,
+            MainState.Factory mainStateFactory,
+            IFadeService fadeService,
+            ISoundPlayer soundPlayer,
+            ISaver saver,
             Score score)
         {
             this.mainView = mainView;
             this.panelView = panelView;
             this.switcher = switcher;
+            this.mainStateFactory = mainStateFactory;
+
+            this.fadeService = fadeService;
+            this.soundPlayer = soundPlayer;
+            this.saver = saver;
             this.score = score;
-
-            fadeService =
-                Bootstrapper.Services.GetService<IFadeService>();
-
-            soundPlayer =
-                Bootstrapper.Services.GetService<ISoundPlayer>();
-
-            saver =
-                Bootstrapper.Services.GetService<ISaver>();
 
             panelImage = panelView.GetComponent<Image>();
         }
@@ -76,12 +77,7 @@ namespace UISystem
 
         private void OnCloseClicked()
         {
-            switcher.SwitchState(
-                new MainState(
-                    mainView,
-                    panelView,
-                    switcher,
-                    score));
+            switcher.SwitchState(mainStateFactory.Create());
         }
 
         private void OnCollectClicked()
@@ -89,6 +85,10 @@ namespace UISystem
             score.Add(1);
 
             panelView.UpdateScore(score.Value);
+        }
+
+        public class Factory : PlaceholderFactory<PanelState>
+        {
         }
     }
 }

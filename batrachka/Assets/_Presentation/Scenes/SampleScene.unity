@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &205362037
+--- !u!1 &130527601
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,41 +131,44 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 205362039}
-  - component: {fileID: 205362038}
+  - component: {fileID: 130527603}
+  - component: {fileID: 130527602}
   m_Layer: 0
-  m_Name: Bootstrapper
+  m_Name: SceneInstaller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &205362038
+--- !u!114 &130527602
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 205362037}
+  m_GameObject: {fileID: 130527601}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dddfd28b75eb6f4478d467047ea2e329, type: 3}
+  m_Script: {fileID: 11500000, guid: 2be9fbb5ce635264fa574c8d6e01f5d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainView: {fileID: 1916126766}
+  panelView: {fileID: 1501437243}
+  uiSwitcher: {fileID: 786492553}
   audioSource: {fileID: 1124006426}
   openClip: {fileID: 8300000, guid: 57d5e2d17f45cc64fa4b300fb249881d, type: 3}
   closeClip: {fileID: 8300000, guid: 41a2af902a1b4b8449bb4e20229c175a, type: 3}
   useJsonSaver: 0
---- !u!4 &205362039
+--- !u!4 &130527603
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 205362037}
+  m_GameObject: {fileID: 130527601}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -31.217678, y: -14.191258, z: 91.220535}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -652,8 +655,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 061b550c12db4ea41bca909dadf5565b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainView: {fileID: 1916126766}
-  panelView: {fileID: 1501437243}
 --- !u!4 &786492554
 Transform:
   m_ObjectHideFlags: 0
@@ -791,7 +792,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 130527602}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -1724,6 +1726,6 @@ SceneRoots:
   - {fileID: 523368646}
   - {fileID: 1980682038}
   - {fileID: 786492554}
-  - {fileID: 205362039}
   - {fileID: 1124006427}
   - {fileID: 1023366406}
+  - {fileID: 130527603}

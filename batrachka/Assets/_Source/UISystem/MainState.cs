@@ -1,25 +1,25 @@
-using UISystem;
+using ViewSystem;
+using Zenject;
 
-namespace ViewSystem
+namespace UISystem
 {
     public class MainState : IUIState
     {
-        private MainView mainView;
-        private PanelView panelView;
-        private UISwitcher switcher;
-
-        private Score score;
+        private readonly MainView mainView;
+        private readonly PanelView panelView;
+        private readonly UISwitcher switcher;
+        private readonly PanelState.Factory panelStateFactory;
 
         public MainState(
             MainView mainView,
             PanelView panelView,
             UISwitcher switcher,
-            Score score)
+            PanelState.Factory panelStateFactory)
         {
             this.mainView = mainView;
             this.panelView = panelView;
             this.switcher = switcher;
-            this.score = score;
+            this.panelStateFactory = panelStateFactory;
         }
 
         public void Enter()
@@ -38,12 +38,11 @@ namespace ViewSystem
 
         private void OnOpenClicked()
         {
-            switcher.SwitchState(
-                new PanelState(
-                    mainView,
-                    panelView,
-                    switcher,
-                    score));
+            switcher.SwitchState(panelStateFactory.Create());
+        }
+
+        public class Factory : PlaceholderFactory<MainState>
+        {
         }
     }
 }

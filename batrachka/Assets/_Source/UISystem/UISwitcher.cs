@@ -1,33 +1,35 @@
 using ServiceSystem;
 using UnityEngine;
-using ViewSystem;
+using Zenject;
 
 namespace UISystem
 {
     public class UISwitcher : MonoBehaviour
     {
-        [SerializeField] private MainView mainView;
-        [SerializeField] private PanelView panelView;
-
         private IUIState currentState;
 
-        private Score score = new Score();
+        private ISaver saver;
+        private Score score;
+        private MainState.Factory mainStateFactory;
+
+        [Inject]
+        public void Construct(
+            ISaver saver,
+            Score score,
+            MainState.Factory mainStateFactory)
+        {
+            this.saver = saver;
+            this.score = score;
+            this.mainStateFactory = mainStateFactory;
+        }
 
         private void Start()
         {
-            ISaver saver =
-                Bootstrapper.Services.GetService<ISaver>();
-
             score.Set(
                 saver.LoadScore(
                     Application.persistentDataPath + "/save.json"));
 
-            SwitchState(
-                new MainState(
-                    mainView,
-                    panelView,
-                    this,
-                    score));
+            SwitchState(mainStateFactory.Create());
         }
 
         public void SwitchState(IUIState newState)
