@@ -1,6 +1,7 @@
 using UnityEngine;
+using ViewSystem;
 
-namespace ViewSystem
+namespace AudioSystem
 {
     public class SoundPlayer : ISoundPlayer
     {
