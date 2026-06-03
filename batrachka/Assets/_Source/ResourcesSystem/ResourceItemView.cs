@@ -5,36 +5,103 @@ namespace ResourcesSystem
 {
     public class ResourceItemView : MonoBehaviour
     {
-        public TMP_Text  nameText;
-        public TMP_Text  valueText;
+        [SerializeField] private TMP_Text nameText;
+        [SerializeField] private TMP_Text valueText;
 
         private ResourceType type;
         private ResourceManager resourceManager;
+        private bool isInitialized;
 
-        public void Init(ResourceType type, ResourceManager manager)
+        public void Init(ResourceType resourceType, ResourceManager manager)
         {
-            this.type = type;
-            this.resourceManager = manager;
+            type = resourceType;
+            resourceManager = manager;
 
-            nameText.text = type.ToString();
+            if (resourceManager == null)
+            {
+                resourceManager = ResourceManager.Instance;
+            }
+
+            isInitialized = true;
+
+            if (nameText != null)
+            {
+                nameText.text = type.ToString();
+            }
+
+            Subscribe();
             UpdateView();
         }
 
-        public void UpdateView()
-        {
-            valueText.text = resourceManager.GetResource(type).ToString();
-        }
-        
         private void OnEnable()
         {
-            if (resourceManager != null)
-                resourceManager.OnResourcesChanged += UpdateView;
+            Subscribe();
+            UpdateView();
         }
 
         private void OnDisable()
         {
-            if (resourceManager != null)
-                resourceManager.OnResourcesChanged -= UpdateView;
+            Unsubscribe();
+        }
+
+        public void UpdateView()
+        {
+            if (!isInitialized)
+            {
+                return;
+            }
+
+            if (resourceManager == null)
+            {
+                resourceManager = ResourceManager.Instance;
+            }
+
+            if (resourceManager == null)
+            {
+                return;
+            }
+
+            if (valueText == null)
+            {
+                return;
+            }
+
+            int value = resourceManager.GetResource(type);
+
+            valueText.text = value.ToString();
+
+            Debug.Log("ResourceItemView updated: " + type + " = " + value);
+        }
+
+        private void Subscribe()
+        {
+            if (!isInitialized)
+            {
+                return;
+            }
+
+            if (resourceManager == null)
+            {
+                resourceManager = ResourceManager.Instance;
+            }
+
+            if (resourceManager == null)
+            {
+                return;
+            }
+
+            resourceManager.OnResourcesChanged -= UpdateView;
+            resourceManager.OnResourcesChanged += UpdateView;
+        }
+
+        private void Unsubscribe()
+        {
+            if (resourceManager == null)
+            {
+                return;
+            }
+
+            resourceManager.OnResourcesChanged -= UpdateView;
         }
     }
 }
