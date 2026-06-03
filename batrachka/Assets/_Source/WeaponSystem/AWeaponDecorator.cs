@@ -1,15 +1,17 @@
+using UnityEngine;
+
 namespace WeaponSystem
 {
-    public abstract class AWeaponDecorator : IWeapon
+    public abstract class AWeaponDecorator : AWeapon
     {
-        protected IWeapon weapon;
+        protected readonly AWeapon weapon;
 
-        public AWeaponDecorator(IWeapon weapon)
+        protected AWeaponDecorator(AWeapon weapon, Camera camera) : base(camera)
         {
             this.weapon = weapon;
         }
 
-        public virtual void Attack()
+        public override void Attack()
         {
             weapon.Attack();
         }

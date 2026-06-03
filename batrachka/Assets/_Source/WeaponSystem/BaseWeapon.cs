@@ -1,29 +1,28 @@
+using EnemySystem;
 using UnityEngine;
 
 namespace WeaponSystem
 {
-    public class BaseWeapon : IWeapon
+    public class BaseWeapon : AWeapon
     {
-        private Camera cam;
+        private readonly int damage;
 
-        public BaseWeapon(Camera cam)
+        public BaseWeapon(Camera camera, int damage = 1) : base(camera)
         {
-            this.cam = cam;
+            this.damage = damage;
         }
 
-        public virtual void Attack()
+        public override void Attack()
         {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, 100))
+            if (!TryGetEnemyUnderCursor(out Enemy enemy))
             {
-                var enemy = hit.collider.GetComponent<EnemySystem.Enemy>();
-                if (enemy != null)
-                {
-                    enemy.TakeDamage(1);
-                }
+                Debug.Log("BaseWeapon attack missed");
+                return;
             }
+
+            enemy.TakeDamage(damage);
+
+            Debug.Log("BaseWeapon attack. Damage: " + damage);
         }
     }
 }

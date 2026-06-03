@@ -1,26 +1,77 @@
+using ObserverSystem;
 using UnityEngine;
 
 namespace PlayerSystem
 {
+    [RequireComponent(typeof(HealthSubject))]
     public class Health : MonoBehaviour
     {
-        public int health = 10;
+        [SerializeField] private int maxHealth = 10;
+
+        private int currentHealth;
+        private bool isDead;
+
+        private HealthSubject healthSubject;
+
+        public int CurrentHealth => currentHealth;
+        public int MaxHealth => maxHealth;
+        public bool IsDead => isDead;
+
+        private void Awake()
+        {
+            currentHealth = maxHealth;
+            isDead = false;
+
+            healthSubject = GetComponent<HealthSubject>();
+        }
 
         public void TakeDamage(int damage)
         {
-            health -= damage;
+            if (isDead)
+            {
+                return;
+            }
 
-            EventManager.PlayerDamaged(damage);
+            if (damage <= 0)
+            {
+                return;
+            }
 
-            if (health <= 0)
+            currentHealth -= damage;
+
+            if (currentHealth < 0)
+            {
+                currentHealth = 0;
+            }
+
+            healthSubject.NotifyDamage(
+                gameObject,
+                damage,
+                currentHealth,
+                maxHealth);
+
+            if (currentHealth <= 0)
             {
                 Die();
             }
         }
 
+        public void ResetHealth()
+        {
+            currentHealth = maxHealth;
+            isDead = false;
+        }
+
         private void Die()
         {
-            Debug.Log("GG");
+            if (isDead)
+            {
+                return;
+            }
+
+            isDead = true;
+
+            Debug.Log(gameObject.name + " died");
         }
     }
 }

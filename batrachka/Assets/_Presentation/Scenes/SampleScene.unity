@@ -123,6 +123,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &618961368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 618961370}
+  - component: {fileID: 618961369}
+  m_Layer: 0
+  m_Name: DamageLogger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &618961369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618961368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e5857b58d39cd4384c88d93afab881, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthSubject: {fileID: 1501552227}
+--- !u!4 &618961370
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618961368}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.022952, y: -1.6927375, z: 5.8279557}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,6 +401,7 @@ GameObject:
   - component: {fileID: 1501552221}
   - component: {fileID: 1501552220}
   - component: {fileID: 1501552219}
+  - component: {fileID: 1501552227}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -375,7 +421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef6f27712341b84fa3841b211ddd681, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
+  maxHealth: 10
 --- !u!114 &1501552220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,6 +440,9 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: d99e978452e390249ad5f6206549f481, type: 2}
   fireMaterial: {fileID: 2100000, guid: 8c18102ed3eb0fc4fa8fed699a0e28ce, type: 2}
   shockMaterial: {fileID: 2100000, guid: d1e5cba5b63e4364ea089c26af5f0dec, type: 2}
+  fireShockMaterial: {fileID: 2100000, guid: 17aa7b159b64bd3419a47dacfff3735b, type: 2}
+  commandHistoryLimit: 30
+  showCommandDebugLogs: 0
 --- !u!54 &1501552221
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -419,7 +468,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!136 &1501552222
 CapsuleCollider:
@@ -536,6 +585,18 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1501552227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501552218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b780185e24206bd4faf8dbaf4790766f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1649268764
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,3 +857,4 @@ SceneRoots:
   - {fileID: 1649268768}
   - {fileID: 1501552225}
   - {fileID: 450894208266788111}
+  - {fileID: 618961370}
