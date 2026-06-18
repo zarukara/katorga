@@ -70,7 +70,6 @@ namespace UISystem
             soundPlayer.PlayCloseSound();
 
             saver.SaveScore(
-                score.Value,
                 Application.persistentDataPath + "/save.json");
         }
 

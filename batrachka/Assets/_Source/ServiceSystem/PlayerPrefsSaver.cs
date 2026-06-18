@@ -1,3 +1,4 @@
+using UISystem;
 using UnityEngine;
 
 namespace ServiceSystem
@@ -6,9 +7,16 @@ namespace ServiceSystem
     {
         private const string KEY = "score";
 
-        public void SaveScore(int score, string path = null)
+        private readonly Score score;
+
+        public PlayerPrefsSaver(Score score)
         {
-            PlayerPrefs.SetInt(KEY, score);
+            this.score = score;
+        }
+
+        public void SaveScore(string path = null)
+        {
+            PlayerPrefs.SetInt(KEY, score.Value);
 
             PlayerPrefs.Save();
         }

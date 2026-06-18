@@ -1,6 +1,6 @@
-using UISystem;
+using ViewSystem;
 
-namespace ViewSystem
+namespace UISystem
 {
     public class MainState : IUIState
     {

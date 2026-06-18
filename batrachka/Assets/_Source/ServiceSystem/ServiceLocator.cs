@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UISystem;
 using ViewSystem;
 
 namespace ServiceSystem
@@ -12,13 +13,16 @@ namespace ServiceSystem
         public ServiceLocator(
             IFadeService fadeService,
             ISoundPlayer soundPlayer,
-            ISaver saver)
+            ISaver saver,
+            Score score)
         {
             services[typeof(IFadeService)] = fadeService;
 
             services[typeof(ISoundPlayer)] = soundPlayer;
 
             services[typeof(ISaver)] = saver;
+
+            services[typeof(Score)] = score;
         }
 
         public T GetService<T>()

@@ -11,12 +11,15 @@ namespace UISystem
 
         private IUIState currentState;
 
-        private Score score = new Score();
+        private Score score;
 
         private void Start()
         {
             ISaver saver =
                 Bootstrapper.Services.GetService<ISaver>();
+
+            score =
+                Bootstrapper.Services.GetService<Score>();
 
             score.Set(
                 saver.LoadScore(

@@ -6,7 +6,14 @@ namespace ServiceSystem
 {
     public class JsonSaver : ISaver
     {
-        public void SaveScore(int score, string path = null)
+        private readonly Score score;
+
+        public JsonSaver(Score score)
+        {
+            this.score = score;
+        }
+
+        public void SaveScore(string path = null)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -15,7 +22,7 @@ namespace ServiceSystem
             }
 
             ScoreData data = new ScoreData();
-            data.score = score;
+            data.score = score.Value;
 
             string json = JsonUtility.ToJson(data, true);
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using ServiceSystem;
+using UISystem;
 
 namespace ViewSystem
 {
@@ -15,6 +16,8 @@ namespace ViewSystem
 
         private void Awake()
         {
+            Score score = new Score();
+
             IFadeService fadeService = new FadeService();
 
             ISoundPlayer soundPlayer =
@@ -24,17 +27,18 @@ namespace ViewSystem
 
             if (useJsonSaver)
             {
-                saver = new JsonSaver();
+                saver = new JsonSaver(score);
             }
             else
             {
-                saver = new PlayerPrefsSaver();
+                saver = new PlayerPrefsSaver(score);
             }
 
             Services = new ServiceLocator(
                 fadeService,
                 soundPlayer,
-                saver);
+                saver,
+                score);
         }
     }
 }
