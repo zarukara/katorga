@@ -3,6 +3,7 @@ using InputSystem;
 using ObstacleSystem;
 using PlayerSystem;
 using ScoreSystem;
+using UiSystem;
 using UnityEngine;
 using Zenject;
 
@@ -23,11 +24,13 @@ namespace CoreSystem
         public void Construct(
             PlayerInputReader inputReader,
             PlayerMovement playerMovement,
+            PlayerTrail playerTrail,
             PlayerCollisionHandler collisionHandler,
             PlayerRespawn playerRespawn,
             ObstacleSpawner obstacleSpawner,
             CoinSpawner coinSpawner,
-            ScoreModel scoreModel)
+            ScoreModel scoreModel,
+            MantraView mantraView)
         {
             _inputReader = inputReader;
             _collisionHandler = collisionHandler;
@@ -35,17 +38,21 @@ namespace CoreSystem
             _stateMachine = new GameStateMachine();
 
             _waitingState = new WaitingState(
-                playerMovement
+                playerMovement,
+                playerTrail,
+                mantraView
             );
 
             _playingState = new PlayingState(
                 playerMovement,
+                playerTrail,
                 obstacleSpawner,
                 coinSpawner
             );
 
             _gameOverState = new GameOverState(
                 playerMovement,
+                playerTrail,
                 playerRespawn,
                 collisionHandler,
                 obstacleSpawner,

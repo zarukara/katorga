@@ -4,6 +4,7 @@ using ObstacleSystem;
 using PlayerSystem;
 using PoolSystem;
 using ScoreSystem;
+using UiSystem;
 using UnityEngine;
 using Zenject;
 
@@ -14,8 +15,12 @@ namespace CoreSystem.Installers
         [Header("Player")]
         [SerializeField] private PlayerInputReader playerInputReader;
         [SerializeField] private PlayerMovement playerMovement;
+        [SerializeField] private PlayerTrail playerTrail;
         [SerializeField] private PlayerCollisionHandler playerCollisionHandler;
         [SerializeField] private PlayerRespawn playerRespawn;
+
+        [Header("UI")]
+        [SerializeField] private MantraView mantraView;
 
         [Header("Obstacles")]
         [SerializeField] private ObstacleSpawner obstacleSpawner;
@@ -32,6 +37,7 @@ namespace CoreSystem.Installers
         public override void InstallBindings()
         {
             BindPlayer();
+            BindUI();
             BindScore();
             BindObstacles();
             BindCoins();
@@ -50,6 +56,11 @@ namespace CoreSystem.Installers
                 .AsSingle();
 
             Container
+                .Bind<PlayerTrail>()
+                .FromInstance(playerTrail)
+                .AsSingle();
+
+            Container
                 .Bind<PlayerCollisionHandler>()
                 .FromInstance(playerCollisionHandler)
                 .AsSingle();
@@ -57,6 +68,14 @@ namespace CoreSystem.Installers
             Container
                 .Bind<PlayerRespawn>()
                 .FromInstance(playerRespawn)
+                .AsSingle();
+        }
+
+        private void BindUI()
+        {
+            Container
+                .Bind<MantraView>()
+                .FromInstance(mantraView)
                 .AsSingle();
         }
 

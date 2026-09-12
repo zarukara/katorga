@@ -1,8 +1,9 @@
+using ScoreSystem;
 using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace ScoreSystem
+namespace UiSystem
 {
     public class ScoreView : MonoBehaviour
     {
