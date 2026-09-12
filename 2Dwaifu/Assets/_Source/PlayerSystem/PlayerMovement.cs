@@ -1,18 +1,26 @@
 using InputSystem;
 using UnityEngine;
+using Zenject;
 
 namespace PlayerSystem
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerMovement : MonoBehaviour
     {
-        [SerializeField] private PlayerInputReader inputReader;
         [SerializeField] private float downwardGravity = 2f;
         [SerializeField] private float upwardGravity = 2f;
         [SerializeField] private float maxVerticalSpeed = 5f;
 
+        private PlayerInputReader _inputReader;
         private Rigidbody2D _rigidbody;
+
         private bool _isMovementEnabled;
+
+        [Inject]
+        public void Construct(PlayerInputReader inputReader)
+        {
+            _inputReader = inputReader;
+        }
 
         private void Awake()
         {
@@ -44,7 +52,7 @@ namespace PlayerSystem
 
         private void UpdateGravity()
         {
-            _rigidbody.gravityScale = inputReader.IsJumpPressed
+            _rigidbody.gravityScale = _inputReader.IsJumpPressed
                 ? -upwardGravity
                 : downwardGravity;
         }

@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using PlayerSystem;
 using UnityEngine;
+using Zenject;
 
 namespace ObstacleSystem
 {
     public class ObstacleSpawner : MonoBehaviour
     {
         [SerializeField] private Obstacle obstaclePrefab;
-        [SerializeField] private Transform player;
 
         [Header("Spawn")]
         [SerializeField] private float spawnX = 10f;
@@ -23,8 +24,16 @@ namespace ObstacleSystem
 
         private readonly List<Obstacle> _spawnedObstacles = new();
 
+        private PlayerMovement _playerMovement;
+
         private float _spawnTimer;
         private bool _isSpawning;
+
+        [Inject]
+        public void Construct(PlayerMovement playerMovement)
+        {
+            _playerMovement = playerMovement;
+        }
 
         private void Update()
         {
@@ -67,18 +76,31 @@ namespace ObstacleSystem
             float upperCenterY = (upperMinY + upperMaxY) / 2f;
             float lowerCenterY = (lowerMinY + lowerMaxY) / 2f;
 
-            float distanceToUpper = Mathf.Abs(player.position.y - upperCenterY);
-            float distanceToLower = Mathf.Abs(player.position.y - lowerCenterY);
+            float playerY = _playerMovement.transform.position.y;
+
+            float distanceToUpper = Mathf.Abs(
+                playerY - upperCenterY
+            );
+
+            float distanceToLower = Mathf.Abs(
+                playerY - lowerCenterY
+            );
 
             float spawnY;
 
             if (distanceToUpper < distanceToLower)
             {
-                spawnY = Random.Range(upperMinY, upperMaxY);
+                spawnY = Random.Range(
+                    upperMinY,
+                    upperMaxY
+                );
             }
             else
             {
-                spawnY = Random.Range(lowerMinY, lowerMaxY);
+                spawnY = Random.Range(
+                    lowerMinY,
+                    lowerMaxY
+                );
             }
 
             Vector3 spawnPosition = new Vector3(

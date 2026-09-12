@@ -2,16 +2,14 @@ using InputSystem;
 using ObstacleSystem;
 using PlayerSystem;
 using UnityEngine;
+using Zenject;
 
 namespace CoreSystem
 {
     public class GameFlowController : MonoBehaviour
     {
-        [SerializeField] private PlayerInputReader inputReader;
-        [SerializeField] private PlayerMovement playerMovement;
-        [SerializeField] private PlayerCollisionHandler collisionHandler;
-        [SerializeField] private PlayerRespawn playerRespawn;
-        [SerializeField] private ObstacleSpawner obstacleSpawner;
+        private PlayerInputReader _inputReader;
+        private PlayerCollisionHandler _collisionHandler;
 
         private GameStateMachine _stateMachine;
 
@@ -19,8 +17,17 @@ namespace CoreSystem
         private PlayingState _playingState;
         private GameOverState _gameOverState;
 
-        private void Awake()
+        [Inject]
+        public void Construct(
+            PlayerInputReader inputReader,
+            PlayerMovement playerMovement,
+            PlayerCollisionHandler collisionHandler,
+            PlayerRespawn playerRespawn,
+            ObstacleSpawner obstacleSpawner)
         {
+            _inputReader = inputReader;
+            _collisionHandler = collisionHandler;
+
             _stateMachine = new GameStateMachine();
 
             _waitingState = new WaitingState(
@@ -38,24 +45,28 @@ namespace CoreSystem
                 collisionHandler,
                 obstacleSpawner
             );
-        }
 
-        private void OnEnable()
-        {
-            inputReader.InputPressed += OnInputPressed;
-            collisionHandler.Died += OnPlayerDied;
+            _inputReader.InputPressed += OnInputPressed;
+            _collisionHandler.Died += OnPlayerDied;
         }
 
         private void Start()
         {
-            collisionHandler.ResetState();
+            _collisionHandler.ResetState();
             _stateMachine.Initialize(_waitingState);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
-            inputReader.InputPressed -= OnInputPressed;
-            collisionHandler.Died -= OnPlayerDied;
+            if (_inputReader != null)
+            {
+                _inputReader.InputPressed -= OnInputPressed;
+            }
+
+            if (_collisionHandler != null)
+            {
+                _collisionHandler.Died -= OnPlayerDied;
+            }
         }
 
         private void OnInputPressed()
