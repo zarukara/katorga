@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace ObstacleSystem
@@ -5,25 +6,39 @@ namespace ObstacleSystem
     public class Obstacle : MonoBehaviour
     {
         [SerializeField] private float moveSpeed = 4f;
-        [SerializeField] private float destroyX = -12f;
+        [SerializeField] private float despawnX = -12f;
+
+        public event Action<Obstacle> DespawnRequested;
+
+        private bool _despawnRequested;
+
+        private void OnEnable()
+        {
+            _despawnRequested = false;
+        }
 
         private void Update()
         {
             Move();
-            TryDestroy();
+            CheckDespawn();
         }
 
         private void Move()
         {
-            transform.position += Vector3.left * (moveSpeed * Time.deltaTime);
+            transform.position +=
+                Vector3.left * (moveSpeed * Time.deltaTime);
         }
 
-        private void TryDestroy()
+        private void CheckDespawn()
         {
-            if (transform.position.x <= destroyX)
-            {
-                Destroy(gameObject);
-            }
+            if (_despawnRequested)
+                return;
+
+            if (transform.position.x > despawnX)
+                return;
+
+            _despawnRequested = true;
+            DespawnRequested?.Invoke(this);
         }
     }
 }

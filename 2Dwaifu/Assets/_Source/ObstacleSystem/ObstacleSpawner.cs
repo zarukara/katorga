@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PlayerSystem;
+using PoolSystem;
 using UnityEngine;
 using Zenject;
 
@@ -7,8 +8,6 @@ namespace ObstacleSystem
 {
     public class ObstacleSpawner : MonoBehaviour
     {
-        [SerializeField] private Obstacle obstaclePrefab;
-
         [Header("Spawn")]
         [SerializeField] private float spawnX = 10f;
         [SerializeField] private float minSpawnInterval = 2.5f;
@@ -22,17 +21,21 @@ namespace ObstacleSystem
         [SerializeField] private float lowerMinY = -3f;
         [SerializeField] private float lowerMaxY = -2f;
 
-        private readonly List<Obstacle> _spawnedObstacles = new();
+        private readonly HashSet<Obstacle> _spawnedObstacles = new();
 
         private PlayerMovement _playerMovement;
+        private ObstaclePool _obstaclePool;
 
         private float _spawnTimer;
         private bool _isSpawning;
 
         [Inject]
-        public void Construct(PlayerMovement playerMovement)
+        public void Construct(
+            PlayerMovement playerMovement,
+            ObstaclePool obstaclePool)
         {
             _playerMovement = playerMovement;
+            _obstaclePool = obstaclePool;
         }
 
         private void Update()
@@ -62,46 +65,37 @@ namespace ObstacleSystem
 
         public void ClearObstacles()
         {
-            foreach (Obstacle obstacle in _spawnedObstacles)
-            {
-                if (obstacle != null)
-                    Destroy(obstacle.gameObject);
-            }
+            Obstacle[] obstacles =
+                new Obstacle[_spawnedObstacles.Count];
 
-            _spawnedObstacles.Clear();
+            _spawnedObstacles.CopyTo(obstacles);
+
+            foreach (Obstacle obstacle in obstacles)
+            {
+                ReleaseObstacle(obstacle);
+            }
         }
 
         private void SpawnObstacle()
         {
-            float upperCenterY = (upperMinY + upperMaxY) / 2f;
-            float lowerCenterY = (lowerMinY + lowerMaxY) / 2f;
+            float upperCenterY =
+                (upperMinY + upperMaxY) / 2f;
 
-            float playerY = _playerMovement.transform.position.y;
+            float lowerCenterY =
+                (lowerMinY + lowerMaxY) / 2f;
 
-            float distanceToUpper = Mathf.Abs(
-                playerY - upperCenterY
-            );
+            float playerY =
+                _playerMovement.transform.position.y;
 
-            float distanceToLower = Mathf.Abs(
-                playerY - lowerCenterY
-            );
+            float distanceToUpper =
+                Mathf.Abs(playerY - upperCenterY);
 
-            float spawnY;
+            float distanceToLower =
+                Mathf.Abs(playerY - lowerCenterY);
 
-            if (distanceToUpper < distanceToLower)
-            {
-                spawnY = Random.Range(
-                    upperMinY,
-                    upperMaxY
-                );
-            }
-            else
-            {
-                spawnY = Random.Range(
-                    lowerMinY,
-                    lowerMaxY
-                );
-            }
+            float spawnY = distanceToUpper < distanceToLower
+                ? Random.Range(upperMinY, upperMaxY)
+                : Random.Range(lowerMinY, lowerMaxY);
 
             Vector3 spawnPosition = new Vector3(
                 spawnX,
@@ -109,13 +103,27 @@ namespace ObstacleSystem
                 0f
             );
 
-            Obstacle obstacle = Instantiate(
-                obstaclePrefab,
-                spawnPosition,
-                Quaternion.identity
-            );
+            Obstacle obstacle =
+                _obstaclePool.Get(spawnPosition);
+
+            obstacle.DespawnRequested += OnDespawnRequested;
 
             _spawnedObstacles.Add(obstacle);
+        }
+
+        private void OnDespawnRequested(Obstacle obstacle)
+        {
+            ReleaseObstacle(obstacle);
+        }
+
+        private void ReleaseObstacle(Obstacle obstacle)
+        {
+            if (!_spawnedObstacles.Remove(obstacle))
+                return;
+
+            obstacle.DespawnRequested -= OnDespawnRequested;
+
+            _obstaclePool.Release(obstacle);
         }
 
         private void ResetTimer()
