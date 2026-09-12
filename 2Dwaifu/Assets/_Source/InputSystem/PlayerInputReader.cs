@@ -1,18 +1,32 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace InputSystem
 {
     public class PlayerInputReader : MonoBehaviour
     {
-        public event Action JumpPressed;
+        [SerializeField] private InputActionReference jumpAction;
 
-        private void Update()
+        public event Action InputPressed;
+
+        public bool IsJumpPressed => jumpAction.action.IsPressed();
+
+        private void OnEnable()
         {
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
-            {
-                JumpPressed?.Invoke();
-            }
+            jumpAction.action.started += OnInputStarted;
+            jumpAction.action.Enable();
+        }
+
+        private void OnDisable()
+        {
+            jumpAction.action.started -= OnInputStarted;
+            jumpAction.action.Disable();
+        }
+
+        private void OnInputStarted(InputAction.CallbackContext context)
+        {
+            InputPressed?.Invoke();
         }
     }
 }
