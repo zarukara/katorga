@@ -1,5 +1,7 @@
+using CoinSystem;
 using ObstacleSystem;
 using PlayerSystem;
+using ScoreSystem;
 
 namespace CoreSystem
 {
@@ -8,18 +10,28 @@ namespace CoreSystem
         private readonly PlayerMovement _playerMovement;
         private readonly PlayerRespawn _playerRespawn;
         private readonly PlayerCollisionHandler _collisionHandler;
+
         private readonly ObstacleSpawner _obstacleSpawner;
+        private readonly CoinSpawner _coinSpawner;
+
+        private readonly ScoreModel _scoreModel;
 
         public GameOverState(
             PlayerMovement playerMovement,
             PlayerRespawn playerRespawn,
             PlayerCollisionHandler collisionHandler,
-            ObstacleSpawner obstacleSpawner)
+            ObstacleSpawner obstacleSpawner,
+            CoinSpawner coinSpawner,
+            ScoreModel scoreModel)
         {
             _playerMovement = playerMovement;
             _playerRespawn = playerRespawn;
             _collisionHandler = collisionHandler;
+
             _obstacleSpawner = obstacleSpawner;
+            _coinSpawner = coinSpawner;
+
+            _scoreModel = scoreModel;
         }
 
         public override void Enter()
@@ -28,6 +40,11 @@ namespace CoreSystem
 
             _obstacleSpawner.StopSpawning();
             _obstacleSpawner.ClearObstacles();
+
+            _coinSpawner.StopSpawning();
+            _coinSpawner.ClearCoins();
+
+            _scoreModel.Reset();
 
             _playerRespawn.ResetPosition();
             _collisionHandler.ResetState();

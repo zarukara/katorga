@@ -1,6 +1,8 @@
+using CoinSystem;
 using InputSystem;
 using ObstacleSystem;
 using PlayerSystem;
+using ScoreSystem;
 using UnityEngine;
 using Zenject;
 
@@ -23,7 +25,9 @@ namespace CoreSystem
             PlayerMovement playerMovement,
             PlayerCollisionHandler collisionHandler,
             PlayerRespawn playerRespawn,
-            ObstacleSpawner obstacleSpawner)
+            ObstacleSpawner obstacleSpawner,
+            CoinSpawner coinSpawner,
+            ScoreModel scoreModel)
         {
             _inputReader = inputReader;
             _collisionHandler = collisionHandler;
@@ -36,14 +40,17 @@ namespace CoreSystem
 
             _playingState = new PlayingState(
                 playerMovement,
-                obstacleSpawner
+                obstacleSpawner,
+                coinSpawner
             );
 
             _gameOverState = new GameOverState(
                 playerMovement,
                 playerRespawn,
                 collisionHandler,
-                obstacleSpawner
+                obstacleSpawner,
+                coinSpawner,
+                scoreModel
             );
 
             _inputReader.InputPressed += OnInputPressed;
@@ -59,14 +66,10 @@ namespace CoreSystem
         private void OnDestroy()
         {
             if (_inputReader != null)
-            {
                 _inputReader.InputPressed -= OnInputPressed;
-            }
 
             if (_collisionHandler != null)
-            {
                 _collisionHandler.Died -= OnPlayerDied;
-            }
         }
 
         private void OnInputPressed()

@@ -1,7 +1,9 @@
+using CoinSystem;
 using InputSystem;
 using ObstacleSystem;
 using PlayerSystem;
 using PoolSystem;
+using ScoreSystem;
 using UnityEngine;
 using Zenject;
 
@@ -19,12 +21,20 @@ namespace CoreSystem.Installers
         [SerializeField] private ObstacleSpawner obstacleSpawner;
         [SerializeField] private Obstacle obstaclePrefab;
         [SerializeField] private Transform obstaclePoolRoot;
-        [SerializeField] private int obstaclePoolInitialSize = 5;
+        [SerializeField] private int obstaclePoolInitialSize = 2;
+
+        [Header("Coins")]
+        [SerializeField] private CoinSpawner coinSpawner;
+        [SerializeField] private Coin coinPrefab;
+        [SerializeField] private Transform coinPoolRoot;
+        [SerializeField] private int coinPoolInitialSize = 3;
 
         public override void InstallBindings()
         {
             BindPlayer();
+            BindScore();
             BindObstacles();
+            BindCoins();
         }
 
         private void BindPlayer()
@@ -50,6 +60,13 @@ namespace CoreSystem.Installers
                 .AsSingle();
         }
 
+        private void BindScore()
+        {
+            Container
+                .Bind<ScoreModel>()
+                .AsSingle();
+        }
+
         private void BindObstacles()
         {
             Container
@@ -65,6 +82,26 @@ namespace CoreSystem.Installers
                         obstaclePrefab,
                         obstaclePoolRoot,
                         obstaclePoolInitialSize
+                    ))
+                .AsSingle()
+                .NonLazy();
+        }
+
+        private void BindCoins()
+        {
+            Container
+                .Bind<CoinSpawner>()
+                .FromInstance(coinSpawner)
+                .AsSingle();
+
+            Container
+                .Bind<CoinPool>()
+                .FromMethod(context =>
+                    new CoinPool(
+                        context.Container,
+                        coinPrefab,
+                        coinPoolRoot,
+                        coinPoolInitialSize
                     ))
                 .AsSingle()
                 .NonLazy();

@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 478144224}
   - component: {fileID: 478144226}
   - component: {fileID: 478144225}
+  - component: {fileID: 478144227}
   m_Layer: 5
   m_Name: Score
   m_TagString: Untagged
@@ -392,6 +393,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 478144223}
   m_CullTransparentMesh: 1
+--- !u!114 &478144227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478144223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f914a8fe211cf344a28d38d90da01a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreText: {fileID: 478144225}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,6 +536,10 @@ MonoBehaviour:
   obstaclePrefab: {fileID: 1259673362318838124, guid: 3233880ef375ee143be33c8a61bab703, type: 3}
   obstaclePoolRoot: {fileID: 1004836844}
   obstaclePoolInitialSize: 2
+  coinSpawner: {fileID: 1424214244}
+  coinPrefab: {fileID: 960065656862658432, guid: 06f57c91ea131d64ca2f8829042105db, type: 3}
+  coinPoolRoot: {fileID: 1073224424}
+  coinPoolInitialSize: 2
 --- !u!114 &588555766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -644,6 +662,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1073224423
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1073224424}
+  m_Layer: 0
+  m_Name: Coins
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1073224424
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1073224423}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1346492033}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1346492032
 GameObject:
   m_ObjectHideFlags: 0
@@ -674,6 +723,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1004836844}
+  - {fileID: 1073224424}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1424214241
@@ -686,8 +736,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1424214243}
   - component: {fileID: 1424214242}
+  - component: {fileID: 1424214244}
   m_Layer: 0
-  m_Name: Spawner
+  m_Name: Spawners
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -727,6 +778,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1424214244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424214241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17f443ef671357f44ac76a4b539acf5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnX: 10
+  minSpawnY: -0.75
+  maxSpawnY: 0.75
+  minSpawnInterval: 3
+  maxSpawnInterval: 5
 --- !u!1 &1437293480
 GameObject:
   m_ObjectHideFlags: 0
