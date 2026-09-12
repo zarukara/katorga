@@ -1,86 +1,51 @@
-using System.Collections.Generic;
+using System;
 using CoinSystem;
 using UnityEngine;
-using Zenject;
 
 namespace PoolSystem
 {
-    public class CoinPool
+    public sealed class CoinPool : ICoinCollectionSource
     {
-        private readonly DiContainer _container;
-        private readonly Coin _prefab;
-        private readonly Transform _parent;
+        private readonly Func<Coin> _createCoin;
+        private readonly ObjectPool<Coin> _pool;
 
-        private readonly Queue<Coin> _availableCoins = new();
-        private readonly HashSet<Coin> _activeCoins = new();
+        public event Action CoinCollected;
 
-        public CoinPool(
-            DiContainer container,
-            Coin prefab,
-            Transform parent,
-            int initialSize)
+        public CoinPool(Func<Coin> createCoin, int initialSize)
         {
-            _container = container;
-            _prefab = prefab;
-            _parent = parent;
-
-            CreateInitialPool(initialSize);
+            _createCoin = createCoin ?? throw new ArgumentNullException(nameof(createCoin));
+            _pool = new ObjectPool<Coin>(CreateCoin, coin => coin.Deactivate(), initialSize);
         }
 
         public Coin Get(Vector3 position, Transform target)
         {
-            Coin coin = _availableCoins.Count > 0
-                ? _availableCoins.Dequeue()
-                : CreateCoin();
-
+            Coin coin = _pool.Get();
             coin.Activate(position, target);
-
-            _activeCoins.Add(coin);
-
             return coin;
         }
 
-        public void Release(Coin coin)
-        {
-            if (coin == null)
-                return;
+        public bool Release(Coin coin) => _pool.Release(coin);
 
-            if (!_activeCoins.Remove(coin))
-                return;
-
-            coin.gameObject.SetActive(false);
-            _availableCoins.Enqueue(coin);
-        }
-
-        public void ReleaseAll()
-        {
-            Coin[] coins = new Coin[_activeCoins.Count];
-
-            _activeCoins.CopyTo(coins);
-
-            foreach (Coin coin in coins)
-            {
-                Release(coin);
-            }
-        }
-
-        private void CreateInitialPool(int initialSize)
-        {
-            for (int i = 0; i < initialSize; i++)
-            {
-                Coin coin = CreateCoin();
-
-                coin.gameObject.SetActive(false);
-                _availableCoins.Enqueue(coin);
-            }
-        }
+        public void ReleaseAll() => _pool.ReleaseAll();
 
         private Coin CreateCoin()
         {
-            return _container.InstantiatePrefabForComponent<Coin>(
-                _prefab,
-                _parent
-            );
+            Coin coin = _createCoin();
+            if (coin == null)
+                throw new InvalidOperationException("The coin factory returned no coin.");
+
+            // Subscriptions belong to the pool and are installed once per instance.
+            coin.Collected += OnCoinCollected;
+            coin.DespawnRequested += OnDespawnRequested;
+            return coin;
         }
+
+        private void OnCoinCollected(Coin coin)
+        {
+            if (_pool.Release(coin))
+                CoinCollected?.Invoke();
+        }
+
+        private void OnDespawnRequested(Coin coin) => _pool.Release(coin);
     }
 }

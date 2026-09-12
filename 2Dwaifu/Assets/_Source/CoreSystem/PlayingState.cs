@@ -4,7 +4,7 @@ using PlayerSystem;
 
 namespace CoreSystem
 {
-    public class PlayingState : AGameState
+    public sealed class PlayingState : IGameState
     {
         private readonly PlayerMovement _playerMovement;
         private readonly PlayerTrail _playerTrail;
@@ -23,7 +23,7 @@ namespace CoreSystem
             _coinSpawner = coinSpawner;
         }
 
-        public override void Enter()
+        public void Enter()
         {
             _playerMovement.EnableMovement();
             _playerTrail.EnableTrail();
@@ -32,7 +32,7 @@ namespace CoreSystem
             _coinSpawner.StartSpawning();
         }
 
-        public override void Exit()
+        public void Exit()
         {
             _obstacleSpawner.StopSpawning();
             _coinSpawner.StopSpawning();

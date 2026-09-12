@@ -2,7 +2,7 @@ using System;
 
 namespace ScoreSystem
 {
-    public class ScoreModel
+    public sealed class ScoreModel
     {
         public event Action<int> ScoreChanged;
 

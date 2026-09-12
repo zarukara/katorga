@@ -1,26 +1,41 @@
+using System;
+
 namespace CoreSystem
 {
-    public class GameStateMachine
+    public sealed class GameStateMachine
     {
-        private AGameState _currentState;
+        private bool _isTransitioning;
 
-        public AGameState CurrentState => _currentState;
+        public IGameState CurrentState { get; private set; }
 
-        public void Initialize(AGameState initialState)
+        public void Initialize(IGameState initialState)
         {
-            _currentState = initialState;
-            _currentState.Enter();
+            if (CurrentState != null)
+                throw new InvalidOperationException("The state machine is already initialized.");
+
+            ChangeState(initialState);
         }
 
-        public void ChangeState(AGameState newState)
+        public void ChangeState(IGameState newState)
         {
-            if (newState == null || newState == _currentState)
+            if (newState == null)
+                throw new ArgumentNullException(nameof(newState));
+            if (_isTransitioning)
+                throw new InvalidOperationException("A state transition is already in progress.");
+            if (ReferenceEquals(newState, CurrentState))
                 return;
 
-            _currentState?.Exit();
-
-            _currentState = newState;
-            _currentState.Enter();
+            _isTransitioning = true;
+            try
+            {
+                CurrentState?.Exit();
+                CurrentState = newState;
+                CurrentState.Enter();
+            }
+            finally
+            {
+                _isTransitioning = false;
+            }
         }
     }
 }

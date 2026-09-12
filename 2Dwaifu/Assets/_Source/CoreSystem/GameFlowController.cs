@@ -1,90 +1,58 @@
-using CoinSystem;
 using InputSystem;
-using ObstacleSystem;
 using PlayerSystem;
-using ScoreSystem;
-using UiSystem;
 using UnityEngine;
 using Zenject;
 
 namespace CoreSystem
 {
-    public class GameFlowController : MonoBehaviour
+    public sealed class GameFlowController : MonoBehaviour
     {
-        private PlayerInputReader _inputReader;
-        private PlayerCollisionHandler _collisionHandler;
-
+        private IPlayerInput _input;
+        private PlayerCollisionHandler _collisions;
         private GameStateMachine _stateMachine;
-
         private WaitingState _waitingState;
         private PlayingState _playingState;
-        private GameOverState _gameOverState;
+        private ResettingState _resettingState;
 
         [Inject]
         public void Construct(
-            PlayerInputReader inputReader,
-            PlayerMovement playerMovement,
-            PlayerTrail playerTrail,
-            PlayerCollisionHandler collisionHandler,
-            PlayerRespawn playerRespawn,
-            ObstacleSpawner obstacleSpawner,
-            CoinSpawner coinSpawner,
-            ScoreModel scoreModel,
-            MantraView mantraView)
+            IPlayerInput input,
+            PlayerCollisionHandler collisions,
+            GameStateMachine stateMachine,
+            WaitingState waitingState,
+            PlayingState playingState,
+            ResettingState resettingState)
         {
-            _inputReader = inputReader;
-            _collisionHandler = collisionHandler;
+            _input = input;
+            _collisions = collisions;
+            _stateMachine = stateMachine;
+            _waitingState = waitingState;
+            _playingState = playingState;
+            _resettingState = resettingState;
 
-            _stateMachine = new GameStateMachine();
-
-            _waitingState = new WaitingState(
-                playerMovement,
-                playerTrail,
-                mantraView
-            );
-
-            _playingState = new PlayingState(
-                playerMovement,
-                playerTrail,
-                obstacleSpawner,
-                coinSpawner
-            );
-
-            _gameOverState = new GameOverState(
-                playerMovement,
-                playerTrail,
-                playerRespawn,
-                collisionHandler,
-                obstacleSpawner,
-                coinSpawner,
-                scoreModel
-            );
-
-            _inputReader.InputPressed += OnInputPressed;
-            _collisionHandler.Died += OnPlayerDied;
+            // The controller and its event sources share the scene lifetime.
+            _input.JumpPressed += OnJumpPressed;
+            _collisions.Died += OnPlayerDied;
         }
 
         private void Start()
         {
-            _collisionHandler.ResetState();
+            _collisions.ResetDeathState();
             _stateMachine.Initialize(_waitingState);
         }
 
         private void OnDestroy()
         {
-            if (_inputReader != null)
-                _inputReader.InputPressed -= OnInputPressed;
-
-            if (_collisionHandler != null)
-                _collisionHandler.Died -= OnPlayerDied;
+            if (_input != null)
+                _input.JumpPressed -= OnJumpPressed;
+            if (_collisions != null)
+                _collisions.Died -= OnPlayerDied;
         }
 
-        private void OnInputPressed()
+        private void OnJumpPressed()
         {
             if (_stateMachine.CurrentState == _waitingState)
-            {
                 _stateMachine.ChangeState(_playingState);
-            }
         }
 
         private void OnPlayerDied()
@@ -92,7 +60,7 @@ namespace CoreSystem
             if (_stateMachine.CurrentState != _playingState)
                 return;
 
-            _stateMachine.ChangeState(_gameOverState);
+            _stateMachine.ChangeState(_resettingState);
             _stateMachine.ChangeState(_waitingState);
         }
     }

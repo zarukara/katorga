@@ -5,7 +5,7 @@ using ScoreSystem;
 
 namespace CoreSystem
 {
-    public class GameOverState : AGameState
+    public sealed class ResettingState : IGameState
     {
         private readonly PlayerMovement _playerMovement;
         private readonly PlayerTrail _playerTrail;
@@ -15,7 +15,7 @@ namespace CoreSystem
         private readonly CoinSpawner _coinSpawner;
         private readonly ScoreModel _scoreModel;
 
-        public GameOverState(
+        public ResettingState(
             PlayerMovement playerMovement,
             PlayerTrail playerTrail,
             PlayerRespawn playerRespawn,
@@ -33,7 +33,7 @@ namespace CoreSystem
             _scoreModel = scoreModel;
         }
 
-        public override void Enter()
+        public void Enter()
         {
             _playerMovement.DisableMovement();
             _playerTrail.DisableTrail();
@@ -46,11 +46,11 @@ namespace CoreSystem
 
             _scoreModel.Reset();
 
-            _playerRespawn.ResetPosition();
-            _collisionHandler.ResetState();
+            _playerRespawn.ResetToSpawnPosition();
+            _collisionHandler.ResetDeathState();
         }
 
-        public override void Exit()
+        public void Exit()
         {
         }
     }

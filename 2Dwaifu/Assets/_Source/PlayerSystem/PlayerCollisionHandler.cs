@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PlayerSystem
 {
-    public class PlayerCollisionHandler : MonoBehaviour
+    public sealed class PlayerCollisionHandler : MonoBehaviour
     {
         public event Action Died;
 
@@ -18,7 +18,7 @@ namespace PlayerSystem
             Died?.Invoke();
         }
 
-        public void ResetState()
+        public void ResetDeathState()
         {
             _isDead = false;
         }

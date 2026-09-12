@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PlayerSystem
 {
-    public class PlayerRespawn : MonoBehaviour
+    public sealed class PlayerRespawn : MonoBehaviour
     {
         private Vector3 _startPosition;
 
@@ -11,7 +11,7 @@ namespace PlayerSystem
             _startPosition = transform.position;
         }
 
-        public void ResetPosition()
+        public void ResetToSpawnPosition()
         {
             transform.position = _startPosition;
         }

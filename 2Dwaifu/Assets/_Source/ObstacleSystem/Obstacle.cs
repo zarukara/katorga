@@ -1,20 +1,30 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ObstacleSystem
 {
-    public class Obstacle : MonoBehaviour
+    public sealed class Obstacle : MonoBehaviour
     {
-        [SerializeField] private float moveSpeed = 4f;
+        [SerializeField, Min(0f)] private float moveSpeed = 4f;
+        [FormerlySerializedAs("destroyX")]
         [SerializeField] private float despawnX = -12f;
 
         public event Action<Obstacle> DespawnRequested;
 
         private bool _despawnRequested;
 
-        private void OnEnable()
+        public void Activate(Vector3 position)
         {
+            transform.position = position;
             _despawnRequested = false;
+            gameObject.SetActive(true);
+        }
+
+        public void Deactivate()
+        {
+            _despawnRequested = true;
+            gameObject.SetActive(false);
         }
 
         private void Update()
@@ -25,8 +35,8 @@ namespace ObstacleSystem
 
         private void Move()
         {
-            transform.position +=
-                Vector3.left * (moveSpeed * Time.deltaTime);
+            // Preserve the existing frame-based trajectory and contact timing.
+            transform.position += Vector3.left * (moveSpeed * Time.deltaTime);
         }
 
         private void CheckDespawn()

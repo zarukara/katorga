@@ -3,9 +3,9 @@ using UnityEngine;
 namespace PlayerSystem
 {
     [RequireComponent(typeof(TrailRenderer))]
-    public class PlayerTrail : MonoBehaviour
+    public sealed class PlayerTrail : MonoBehaviour
     {
-        [SerializeField] private float trailMoveSpeed = 4f;
+        [SerializeField, Min(0f)] private float trailMoveSpeed = 4f;
 
         private TrailRenderer _trailRenderer;
         private bool _isActive;
@@ -47,26 +47,18 @@ namespace PlayerSystem
             if (positionCount <= 1)
                 return;
 
-            float moveDistance =
-                trailMoveSpeed * Time.deltaTime;
+            float moveDistance = trailMoveSpeed * Time.deltaTime;
 
             for (int i = 0; i < positionCount - 1; i++)
             {
-                Vector3 position =
-                    _trailRenderer.GetPosition(i);
+                Vector3 position = _trailRenderer.GetPosition(i);
 
                 position.x -= moveDistance;
 
-                _trailRenderer.SetPosition(
-                    i,
-                    position
-                );
+                _trailRenderer.SetPosition(i, position);
             }
 
-            _trailRenderer.SetPosition(
-                positionCount - 1,
-                transform.position
-            );
+            _trailRenderer.SetPosition(positionCount - 1, transform.position);
         }
     }
 }

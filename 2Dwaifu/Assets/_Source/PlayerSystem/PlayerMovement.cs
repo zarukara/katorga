@@ -1,23 +1,28 @@
 using InputSystem;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace PlayerSystem
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class PlayerMovement : MonoBehaviour
+    public sealed class PlayerMovement : MonoBehaviour
     {
-        [SerializeField] private float downwardGravity = 2f;
-        [SerializeField] private float upwardGravity = 2f;
-        [SerializeField] private float maxVerticalSpeed = 5f;
+        [FormerlySerializedAs("downwardGravity")]
+        [SerializeField, Min(0f)] private float downwardGravityScale = 2f;
+        [FormerlySerializedAs("upwardGravity")]
+        [SerializeField, Min(0f)] private float upwardGravityScale = 2f;
+        [FormerlySerializedAs("maxVerticalSpeed")]
+        [Tooltip("Velocity limit before Unity applies gravity during the physics step.")]
+        [SerializeField, Min(0f)] private float prePhysicsSpeedLimit = 5f;
 
-        private PlayerInputReader _inputReader;
+        private IPlayerInput _inputReader;
         private Rigidbody2D _rigidbody;
 
         private bool _isMovementEnabled;
 
         [Inject]
-        public void Construct(PlayerInputReader inputReader)
+        public void Construct(IPlayerInput inputReader)
         {
             _inputReader = inputReader;
         }
@@ -33,7 +38,7 @@ namespace PlayerSystem
                 return;
 
             UpdateGravity();
-            ClampVerticalSpeed();
+            ClampPrePhysicsSpeed();
         }
 
         public void EnableMovement()
@@ -53,22 +58,21 @@ namespace PlayerSystem
         private void UpdateGravity()
         {
             _rigidbody.gravityScale = _inputReader.IsJumpPressed
-                ? -upwardGravity
-                : downwardGravity;
+                ? -upwardGravityScale
+                : downwardGravityScale;
         }
 
-        private void ClampVerticalSpeed()
+        private void ClampPrePhysicsSpeed()
         {
+            // Preserve the tuned movement: Unity adds gravity after this clamp.
             float clampedY = Mathf.Clamp(
                 _rigidbody.velocity.y,
-                -maxVerticalSpeed,
-                maxVerticalSpeed
-            );
+                -prePhysicsSpeedLimit,
+                prePhysicsSpeedLimit);
 
             _rigidbody.velocity = new Vector2(
                 _rigidbody.velocity.x,
-                clampedY
-            );
+                clampedY);
         }
     }
 }

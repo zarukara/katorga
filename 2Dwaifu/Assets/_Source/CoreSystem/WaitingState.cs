@@ -3,32 +3,32 @@ using UiSystem;
 
 namespace CoreSystem
 {
-    public class WaitingState : AGameState
+    public sealed class WaitingState : IGameState
     {
         private readonly PlayerMovement _playerMovement;
         private readonly PlayerTrail _playerTrail;
-        private readonly MantraView _mantraView;
+        private readonly StartPromptView _startPromptView;
 
         public WaitingState(
             PlayerMovement playerMovement,
             PlayerTrail playerTrail,
-            MantraView mantraView)
+            StartPromptView startPromptView)
         {
             _playerMovement = playerMovement;
             _playerTrail = playerTrail;
-            _mantraView = mantraView;
+            _startPromptView = startPromptView;
         }
 
-        public override void Enter()
+        public void Enter()
         {
             _playerMovement.DisableMovement();
             _playerTrail.DisableTrail();
-            _mantraView.Show();
+            _startPromptView.Show();
         }
 
-        public override void Exit()
+        public void Exit()
         {
-            _mantraView.Hide();
+            _startPromptView.Hide();
         }
     }
 }

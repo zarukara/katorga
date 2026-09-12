@@ -4,29 +4,35 @@ using UnityEngine.InputSystem;
 
 namespace InputSystem
 {
-    public class PlayerInputReader : MonoBehaviour
+    public sealed class PlayerInputReader : MonoBehaviour, IPlayerInput
     {
         [SerializeField] private InputActionReference jumpAction;
 
-        public event Action InputPressed;
+        private InputAction _jumpAction;
 
-        public bool IsJumpPressed => jumpAction.action.IsPressed();
+        public event Action JumpPressed;
+
+        public bool IsJumpPressed => _jumpAction != null && _jumpAction.IsPressed();
 
         private void OnEnable()
         {
-            jumpAction.action.started += OnInputStarted;
-            jumpAction.action.Enable();
+            _jumpAction = jumpAction != null ? jumpAction.action : null;
+            if (_jumpAction == null)
+                throw new InvalidOperationException("Assign a valid jump action to PlayerInputReader.");
+
+            _jumpAction.started += OnJumpStarted;
+            _jumpAction.Enable();
         }
 
         private void OnDisable()
         {
-            jumpAction.action.started -= OnInputStarted;
-            jumpAction.action.Disable();
+            if (_jumpAction == null)
+                return;
+
+            _jumpAction.started -= OnJumpStarted;
+            _jumpAction.Disable();
         }
 
-        private void OnInputStarted(InputAction.CallbackContext context)
-        {
-            InputPressed?.Invoke();
-        }
+        private void OnJumpStarted(InputAction.CallbackContext context) => JumpPressed?.Invoke();
     }
 }

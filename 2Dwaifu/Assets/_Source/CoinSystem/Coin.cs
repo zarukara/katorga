@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace CoinSystem
 {
-    public class Coin : MonoBehaviour
+    public sealed class Coin : MonoBehaviour
     {
-        [SerializeField] private float moveSpeed = 4f;
-        [SerializeField] private float magnetRadius = 2.5f;
-        [SerializeField] private float magnetSpeed = 8f;
+        [SerializeField, Min(0f)] private float moveSpeed = 4f;
+        [SerializeField, Min(0f)] private float magnetRadius = 2.5f;
+        [SerializeField, Min(0f)] private float magnetSpeed = 8f;
         [SerializeField] private float despawnX = -12f;
 
         public event Action<Coin> Collected;
@@ -24,6 +24,13 @@ namespace CoinSystem
             _isFinished = false;
 
             gameObject.SetActive(true);
+        }
+
+        public void Deactivate()
+        {
+            _isFinished = true;
+            _target = null;
+            gameObject.SetActive(false);
         }
 
         private void Update()
@@ -51,25 +58,20 @@ namespace CoinSystem
         {
             if (_target != null)
             {
-                float distance = Vector2.Distance(
-                    transform.position,
-                    _target.position
-                );
+                float distance = Vector2.Distance(transform.position, _target.position);
 
                 if (distance <= magnetRadius)
                 {
                     transform.position = Vector3.MoveTowards(
                         transform.position,
                         _target.position,
-                        magnetSpeed * Time.deltaTime
-                    );
+                        magnetSpeed * Time.deltaTime);
 
                     return;
                 }
             }
 
-            transform.position +=
-                Vector3.left * moveSpeed * Time.deltaTime;
+            transform.position += Vector3.left * moveSpeed * Time.deltaTime;
         }
 
         private void CheckDespawn()

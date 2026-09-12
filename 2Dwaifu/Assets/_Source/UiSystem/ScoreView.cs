@@ -5,7 +5,7 @@ using Zenject;
 
 namespace UiSystem
 {
-    public class ScoreView : MonoBehaviour
+    public sealed class ScoreView : MonoBehaviour
     {
         [SerializeField] private TMP_Text scoreText;
 
