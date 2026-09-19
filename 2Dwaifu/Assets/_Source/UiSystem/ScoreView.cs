@@ -1,7 +1,7 @@
 using ScoreSystem;
 using TMPro;
 using UnityEngine;
-using Zenject;
+using VContainer;
 
 namespace UiSystem
 {

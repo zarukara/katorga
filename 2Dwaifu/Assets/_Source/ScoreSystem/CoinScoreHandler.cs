@@ -1,25 +1,35 @@
 using System;
 using CoinSystem;
-using Zenject;
+using VContainer.Unity;
 
 namespace ScoreSystem
 {
-    public sealed class CoinScoreHandler : IInitializable, IDisposable
+    public sealed class CoinScoreHandler :
+        IInitializable,
+        IDisposable
     {
         private readonly ICoinCollectionSource _coins;
         private readonly ScoreModel _score;
+
         private bool _isSubscribed;
 
-        public CoinScoreHandler(ICoinCollectionSource coins, ScoreModel score)
+        public CoinScoreHandler(
+            ICoinCollectionSource coins,
+            ScoreModel score)
         {
-            _coins = coins ?? throw new ArgumentNullException(nameof(coins));
-            _score = score ?? throw new ArgumentNullException(nameof(score));
+            _coins = coins ??
+                     throw new ArgumentNullException(nameof(coins));
+
+            _score = score ??
+                     throw new ArgumentNullException(nameof(score));
         }
 
         public void Initialize()
         {
             if (_isSubscribed)
+            {
                 return;
+            }
 
             _coins.CoinCollected += OnCoinCollected;
             _isSubscribed = true;
@@ -28,12 +38,17 @@ namespace ScoreSystem
         public void Dispose()
         {
             if (!_isSubscribed)
+            {
                 return;
+            }
 
             _coins.CoinCollected -= OnCoinCollected;
             _isSubscribed = false;
         }
 
-        private void OnCoinCollected() => _score.AddPoint();
+        private void OnCoinCollected()
+        {
+            _score.AddPoint();
+        }
     }
 }

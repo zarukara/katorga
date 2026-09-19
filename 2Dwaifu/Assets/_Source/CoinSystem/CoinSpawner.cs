@@ -1,6 +1,6 @@
 using PoolSystem;
 using UnityEngine;
-using Zenject;
+using VContainer;
 
 namespace CoinSystem
 {
@@ -15,11 +15,14 @@ namespace CoinSystem
 
         private Transform _playerTransform;
         private CoinPool _coinPool;
+
         private float _spawnTimer;
         private bool _isSpawning;
 
         [Inject]
-        public void Construct(Transform playerTransform, CoinPool coinPool)
+        public void Construct(
+            Transform playerTransform,
+            CoinPool coinPool)
         {
             _playerTransform = playerTransform;
             _coinPool = coinPool;
@@ -28,9 +31,12 @@ namespace CoinSystem
         private void Update()
         {
             if (!_isSpawning)
+            {
                 return;
+            }
 
             _spawnTimer -= Time.deltaTime;
+
             if (_spawnTimer <= 0f)
             {
                 SpawnCoin();
@@ -40,9 +46,17 @@ namespace CoinSystem
 
         private void OnValidate()
         {
-            minSpawnInterval = Mathf.Max(0.01f, minSpawnInterval);
-            maxSpawnInterval = Mathf.Max(minSpawnInterval, maxSpawnInterval);
-            maxSpawnY = Mathf.Max(minSpawnY, maxSpawnY);
+            minSpawnInterval = Mathf.Max(
+                0.01f,
+                minSpawnInterval);
+
+            maxSpawnInterval = Mathf.Max(
+                minSpawnInterval,
+                maxSpawnInterval);
+
+            maxSpawnY = Mathf.Max(
+                minSpawnY,
+                maxSpawnY);
         }
 
         public void StartSpawning()
@@ -51,19 +65,35 @@ namespace CoinSystem
             ResetTimer();
         }
 
-        public void StopSpawning() => _isSpawning = false;
+        public void StopSpawning()
+        {
+            _isSpawning = false;
+        }
 
-        public void ClearCoins() => _coinPool.ReleaseAll();
+        public void ClearCoins()
+        {
+            _coinPool.ReleaseAll();
+        }
 
         private void SpawnCoin()
         {
-            float spawnY = Random.Range(minSpawnY, maxSpawnY);
-            _coinPool.Get(new Vector3(spawnX, spawnY, 0f), _playerTransform);
+            float spawnY = Random.Range(
+                minSpawnY,
+                maxSpawnY);
+
+            _coinPool.Get(
+                new Vector3(
+                    spawnX,
+                    spawnY,
+                    0f),
+                _playerTransform);
         }
 
         private void ResetTimer()
         {
-            _spawnTimer = Random.Range(minSpawnInterval, maxSpawnInterval);
+            _spawnTimer = Random.Range(
+                minSpawnInterval,
+                maxSpawnInterval);
         }
     }
 }

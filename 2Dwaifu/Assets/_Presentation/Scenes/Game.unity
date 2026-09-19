@@ -499,7 +499,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &588555764
+--- !u!1 &913117382
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -507,34 +507,39 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 588555767}
-  - component: {fileID: 588555766}
-  - component: {fileID: 588555765}
+  - component: {fileID: 913117384}
+  - component: {fileID: 913117383}
   m_Layer: 0
-  m_Name: SceneContext
+  m_Name: GameLifeTimeScope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &588555765
+--- !u!114 &913117383
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588555764}
+  m_GameObject: {fileID: 913117382}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cedebca0895180b4f994718d66170336, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d04cfe5bae66924897847c74d859fde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentReference:
+    TypeName: 
+  autoRun: 1
+  autoInjectGameObjects: []
+  gameFlowController: {fileID: 1018502988}
   playerInputReader: {fileID: 1979771830}
   playerMovement: {fileID: 1888404220}
   playerTrail: {fileID: 1888404224}
   playerCollisionHandler: {fileID: 1888404221}
   playerRespawn: {fileID: 1888404222}
-  mantraView: {fileID: 1787524171}
+  startPromptView: {fileID: 1787524171}
+  scoreView: {fileID: 478144227}
   obstacleSpawner: {fileID: 1424214242}
   obstaclePrefab: {fileID: 1259673362318838124, guid: 3233880ef375ee143be33c8a61bab703, type: 3}
   obstaclePoolRoot: {fileID: 1004836844}
@@ -542,49 +547,17 @@ MonoBehaviour:
   coinSpawner: {fileID: 1424214244}
   coinPrefab: {fileID: 960065656862658432, guid: 06f57c91ea131d64ca2f8829042105db, type: 3}
   coinPoolRoot: {fileID: 1073224424}
-  coinPoolInitialSize: 2
---- !u!114 &588555766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588555764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _scriptableObjectInstallers: []
-  _monoInstallers:
-  - {fileID: 588555765}
-  _installerPrefabs: []
-  _autoRun: 1
-  OnPreInstall:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPostInstall:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPreResolve:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPostResolve:
-    m_PersistentCalls:
-      m_Calls: []
-  _parentNewObjectsUnderSceneContext: 0
-  _contractNames: []
-  _parentContractNames: []
---- !u!4 &588555767
+  coinPoolInitialSize: 3
+--- !u!4 &913117384
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588555764}
+  m_GameObject: {fileID: 913117382}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.23146443, y: -0.24710476, z: 0.11059554}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1108,7 +1081,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a12f9ce32aa8fc149acf29ab60a47de0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mantraText: {fileID: 1787524172}
+  promptText: {fileID: 1787524172}
 --- !u!114 &1787524172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1372,9 +1345,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647a7c2817fed914c95b7339e13e8de8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  downwardGravity: 1
-  upwardGravity: 6
-  maxVerticalSpeed: 7
+  downwardGravityScale: 1
+  upwardGravityScale: 6
+  prePhysicsSpeedLimit: 7
 --- !u!114 &1888404221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1650,4 +1623,4 @@ SceneRoots:
   - {fileID: 1018502989}
   - {fileID: 1346492033}
   - {fileID: 2100061817}
-  - {fileID: 588555767}
+  - {fileID: 913117384}

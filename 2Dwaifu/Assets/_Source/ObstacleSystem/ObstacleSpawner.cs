@@ -1,6 +1,6 @@
 using PoolSystem;
 using UnityEngine;
-using Zenject;
+using VContainer;
 
 namespace ObstacleSystem
 {
@@ -21,11 +21,14 @@ namespace ObstacleSystem
 
         private Transform _playerTransform;
         private ObstaclePool _obstaclePool;
+
         private float _spawnTimer;
         private bool _isSpawning;
 
         [Inject]
-        public void Construct(Transform playerTransform, ObstaclePool obstaclePool)
+        public void Construct(
+            Transform playerTransform,
+            ObstaclePool obstaclePool)
         {
             _playerTransform = playerTransform;
             _obstaclePool = obstaclePool;
@@ -34,9 +37,12 @@ namespace ObstacleSystem
         private void Update()
         {
             if (!_isSpawning)
+            {
                 return;
+            }
 
             _spawnTimer -= Time.deltaTime;
+
             if (_spawnTimer <= 0f)
             {
                 SpawnObstacle();
@@ -46,10 +52,21 @@ namespace ObstacleSystem
 
         private void OnValidate()
         {
-            minSpawnInterval = Mathf.Max(0.01f, minSpawnInterval);
-            maxSpawnInterval = Mathf.Max(minSpawnInterval, maxSpawnInterval);
-            upperMaxY = Mathf.Max(upperMinY, upperMaxY);
-            lowerMaxY = Mathf.Max(lowerMinY, lowerMaxY);
+            minSpawnInterval = Mathf.Max(
+                0.01f,
+                minSpawnInterval);
+
+            maxSpawnInterval = Mathf.Max(
+                minSpawnInterval,
+                maxSpawnInterval);
+
+            upperMaxY = Mathf.Max(
+                upperMinY,
+                upperMaxY);
+
+            lowerMaxY = Mathf.Max(
+                lowerMinY,
+                lowerMaxY);
         }
 
         public void StartSpawning()
@@ -58,28 +75,50 @@ namespace ObstacleSystem
             ResetTimer();
         }
 
-        public void StopSpawning() => _isSpawning = false;
+        public void StopSpawning()
+        {
+            _isSpawning = false;
+        }
 
-        public void ClearObstacles() => _obstaclePool.ReleaseAll();
+        public void ClearObstacles()
+        {
+            _obstaclePool.ReleaseAll();
+        }
 
         private void SpawnObstacle()
         {
-            float upperCenterY = (upperMinY + upperMaxY) / 2f;
-            float lowerCenterY = (lowerMinY + lowerMaxY) / 2f;
-            float playerY = _playerTransform.position.y;
-            float distanceToUpper = Mathf.Abs(playerY - upperCenterY);
-            float distanceToLower = Mathf.Abs(playerY - lowerCenterY);
+            float upperCenterY =
+                (upperMinY + upperMaxY) / 2f;
 
-            float spawnY = distanceToUpper < distanceToLower
-                ? Random.Range(upperMinY, upperMaxY)
-                : Random.Range(lowerMinY, lowerMaxY);
+            float lowerCenterY =
+                (lowerMinY + lowerMaxY) / 2f;
 
-            _obstaclePool.Get(new Vector3(spawnX, spawnY, 0f));
+            float playerY =
+                _playerTransform.position.y;
+
+            float distanceToUpper =
+                Mathf.Abs(playerY - upperCenterY);
+
+            float distanceToLower =
+                Mathf.Abs(playerY - lowerCenterY);
+
+            float spawnY =
+                distanceToUpper < distanceToLower
+                    ? Random.Range(upperMinY, upperMaxY)
+                    : Random.Range(lowerMinY, lowerMaxY);
+
+            _obstaclePool.Get(
+                new Vector3(
+                    spawnX,
+                    spawnY,
+                    0f));
         }
 
         private void ResetTimer()
         {
-            _spawnTimer = Random.Range(minSpawnInterval, maxSpawnInterval);
+            _spawnTimer = Random.Range(
+                minSpawnInterval,
+                maxSpawnInterval);
         }
     }
 }

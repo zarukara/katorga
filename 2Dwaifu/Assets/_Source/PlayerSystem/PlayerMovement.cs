@@ -1,7 +1,7 @@
 using InputSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Zenject;
+using VContainer;
 
 namespace PlayerSystem
 {
@@ -9,12 +9,17 @@ namespace PlayerSystem
     public sealed class PlayerMovement : MonoBehaviour
     {
         [FormerlySerializedAs("downwardGravity")]
-        [SerializeField, Min(0f)] private float downwardGravityScale = 2f;
+        [SerializeField, Min(0f)]
+        private float downwardGravityScale = 2f;
+
         [FormerlySerializedAs("upwardGravity")]
-        [SerializeField, Min(0f)] private float upwardGravityScale = 2f;
+        [SerializeField, Min(0f)]
+        private float upwardGravityScale = 2f;
+
         [FormerlySerializedAs("maxVerticalSpeed")]
         [Tooltip("Velocity limit before Unity applies gravity during the physics step.")]
-        [SerializeField, Min(0f)] private float prePhysicsSpeedLimit = 5f;
+        [SerializeField, Min(0f)]
+        private float prePhysicsSpeedLimit = 5f;
 
         private IPlayerInput _inputReader;
         private Rigidbody2D _rigidbody;
@@ -35,7 +40,9 @@ namespace PlayerSystem
         private void FixedUpdate()
         {
             if (!_isMovementEnabled)
+            {
                 return;
+            }
 
             UpdateGravity();
             ClampPrePhysicsSpeed();
@@ -64,7 +71,6 @@ namespace PlayerSystem
 
         private void ClampPrePhysicsSpeed()
         {
-            // Preserve the tuned movement: Unity adds gravity after this clamp.
             float clampedY = Mathf.Clamp(
                 _rigidbody.velocity.y,
                 -prePhysicsSpeedLimit,
