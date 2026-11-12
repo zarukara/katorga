@@ -1,0 +1,6 @@
+{
+  "name": "Batrachka.Rts.Editor",
+  "rootNamespace": "EditorSystem",
+  "references": ["Batrachka.Rts", "Leopotam.EcsProto"],
+  "includePlatforms": ["Editor"]
+}

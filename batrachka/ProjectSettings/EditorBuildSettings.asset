@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/_Presentation/Scenes/RtsTraining.unity
+    guid: 2ee86b6f019c006449845ec25bc3dad3
   m_configObjects: {}

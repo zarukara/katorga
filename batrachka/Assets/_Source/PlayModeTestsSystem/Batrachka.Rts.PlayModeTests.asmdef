@@ -1,0 +1,5 @@
+{
+  "name": "Batrachka.Rts.PlayModeTests",
+  "references": ["Batrachka.Rts", "Leopotam.EcsProto"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

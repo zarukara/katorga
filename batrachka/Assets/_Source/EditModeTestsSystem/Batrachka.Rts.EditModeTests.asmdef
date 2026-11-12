@@ -1,0 +1,6 @@
+{
+  "name": "Batrachka.Rts.EditModeTests",
+  "references": ["Batrachka.Rts", "Batrachka.Rts.Editor", "Leopotam.EcsProto"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

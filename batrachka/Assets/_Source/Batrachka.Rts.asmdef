@@ -1,0 +1,4 @@
+{
+  "name": "Batrachka.Rts",
+  "references": ["Leopotam.EcsProto"]
+}
